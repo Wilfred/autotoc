@@ -64,6 +64,13 @@
 (\s*- \[.*\]\(.*\)\n)*"
    "")))
 
+(defn- update-toc
+  "Add or update a table of contents in markdown source."
+  [markdown]
+  (->> markdown
+       remove-toc
+       (str (build-toc markdown))))
+
 (defn -main
   "I don't do a whole lot."
   [x]
