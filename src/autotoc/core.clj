@@ -1,5 +1,6 @@
 (ns autotoc.core
-  (:require [clojure.string :refer [split-lines trim join]]))
+  (:require [clojure.string :refer [split-lines trim join lower-case]]
+            [clojure.string :as str]))
 
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
@@ -22,6 +23,14 @@
   [string n]
   (apply str (repeat n string)))
 
+(defn- text->link
+  "Given heading text, convert it to a slug in the form of links used by GitHub."
+  [heading]
+  (-> heading
+      lower-case
+      (str/replace #"[^a-z0-9 ]" "")
+      (str/replace " " "-")))
+
 (defn- build-toc-tree
   "Return a markdown nested list of bullets for this table of contents."
   [weighted-headings]
@@ -29,7 +38,8 @@
         (map (fn [[weight text]]
                (format "%s- [%s](#%s)"
                        (repeat-string "  " (dec weight))
-                       text text))
+                       text
+                       (text->link text)))
              weighted-headings)))
 
 (defn build-toc
