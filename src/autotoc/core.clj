@@ -36,9 +36,9 @@
   "Given markdown source return a table of contents."
   [markdown]
   (->> markdown
-      get-headings
-      (map add-weight)
-      build-toc-tree))
+       get-headings
+       (map add-weight)
+       build-toc-tree))
 
 (defn -main
   "I don't do a whole lot."
