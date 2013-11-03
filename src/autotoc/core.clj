@@ -45,10 +45,11 @@
 (defn build-toc
   "Given markdown source return a table of contents."
   [markdown]
-  (->> markdown
-       get-headings
-       (map add-weight)
-       build-toc-tree))
+  (str "**Table of Contents** *generated with autotoc*\n\n"
+       (->> markdown
+            get-headings
+            (map add-weight)
+            build-toc-tree)))
 
 (defn -main
   "I don't do a whole lot."
