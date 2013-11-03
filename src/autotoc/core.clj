@@ -1,7 +1,7 @@
 (ns autotoc.core
   (:require [clojure.string :refer [split-lines trim join]]))
 
-(defn get-headings
+(defn- get-headings
   "Return a vector of headings in the given markdown source."
   [markdown]
   (loop [headings [] lines (split-lines markdown) in-code false]
@@ -11,13 +11,13 @@
        (.startsWith (trim line) "#") (recur (conj (trim headings) line) (rest lines) in-code)
        :else (recur headings (rest lines) in-code)))))
 
-(defn add-weight
+(defn- add-weight
   "Strip # characters from a heading and return a list (weight, text-content)."
   [heading]
   (let [[_ prefix text] (re-find #"^(#+)(.*?)#*$" (trim heading))]
     (list (count prefix) (trim text))))
 
-(defn build-toc-tree
+(defn- build-toc-tree
   "Return a markdown nested list of bullets for this table of contents."
   [weighted-headings]
   (join "\n"
@@ -27,7 +27,7 @@
                        text text))
              weighted-headings)))
 
-(defn repeat-string
+(defn- repeat-string
   "Return a string that is the original string repeated n times."
   [string n]
   (apply str (repeat n string)))
