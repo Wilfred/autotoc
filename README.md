@@ -1,4 +1,4 @@
-**Table of Contents** *generated with autotoc*
+**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*
 
 - [autotoc](#autotoc)
   - [Usage](#usage)
