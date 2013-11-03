@@ -27,6 +27,14 @@
                        text text))
              weighted-headings)))
 
+(defn build-toc
+  "Given markdown source return a table of contents."
+  [markdown]
+  (->> markdown
+      get-headings
+      (map add-weight)
+      build-toc-tree))
+
 (defn- repeat-string
   "Return a string that is the original string repeated n times."
   [string n]
