@@ -17,6 +17,11 @@
   (let [[_ prefix text] (re-find #"^(#+)(.*?)#*$" (trim heading))]
     (list (count prefix) (trim text))))
 
+(defn- repeat-string
+  "Return a string that is the original string repeated n times."
+  [string n]
+  (apply str (repeat n string)))
+
 (defn- build-toc-tree
   "Return a markdown nested list of bullets for this table of contents."
   [weighted-headings]
@@ -34,11 +39,6 @@
       get-headings
       (map add-weight)
       build-toc-tree))
-
-(defn- repeat-string
-  "Return a string that is the original string repeated n times."
-  [string n]
-  (apply str (repeat n string)))
 
 (defn -main
   "I don't do a whole lot."
