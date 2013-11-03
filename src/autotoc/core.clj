@@ -47,7 +47,7 @@
   "Given markdown source return a table of contents."
   [markdown]
   (format
-   "**Table of Contents** *generated with autotoc*\n\n%s\n\n"
+   "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*\n\n%s\n\n"
    (->> markdown
         get-headings
         (map add-weight)
