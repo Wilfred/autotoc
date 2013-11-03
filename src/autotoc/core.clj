@@ -51,6 +51,18 @@
             (map add-weight)
             build-toc-tree)))
 
+(defn- remove-toc
+  "Remove an existing table of contents from markdown source."
+  [markdown]
+  (trim
+   (str/replace
+    markdown
+    ;; i: case insensitive, m: ^ matches newlines anywhere in string
+    #"(?im)\**table of contents.*
+
+(\s*- \[.*\]\(.*\)\n)*"
+   "")))
+
 (defn -main
   "I don't do a whole lot."
   [x]
