@@ -1,6 +1,7 @@
 (ns autotoc.core
   (:require [clojure.string :refer [split-lines trim join lower-case]]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:import [java.io File]))
 
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
@@ -71,10 +72,16 @@
        remove-toc
        (str (build-toc markdown))))
 
+(defn- file-exists?
+  [path]
+  (.exists (File. path)))
+
 (defn -main
   "I don't do a whole lot."
   [& filenames]
   (if filenames
     (doseq [filename filenames]
-      (spit filename (update-toc (slurp filename))))
+      (if (file-exists? filename)
+        (spit filename (update-toc (slurp filename)))
+        (println "No such file:" filename)))
     (println "Usage: /path/to/readme.md")))
