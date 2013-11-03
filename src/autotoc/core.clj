@@ -73,5 +73,8 @@
 
 (defn -main
   "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+  [& filenames]
+  (if filenames
+    (doseq [filename filenames]
+      (spit filename (update-toc (slurp filename))))
+    (println "Usage: /path/to/readme.md")))
