@@ -1,14 +1,22 @@
+**Table of Contents** *generated with autotoc*
+
+- [autotoc](#autotoc)
+  - [Usage](#usage)
+  - [License](#license)
+
 # autotoc
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure tool that automatically generates tables of contents in
+markdown files. Inspired by
+[doctoc](https://github.com/thlorenz/doctoc/).
 
 ## Usage
 
-FIXME
+    $ lein run /path/to/README.md
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Wilfred Hughes
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
