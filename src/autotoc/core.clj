@@ -24,20 +24,30 @@
   [string n]
   (apply str (repeat n string)))
 
-(defn- text->link
+(defn- github-text->link
   "Given heading text, convert it to a slug in the form of links used by GitHub."
   [heading]
-  (-> heading
-      lower-case
-      (str/replace #"[^a-z0-9 ]" "")
-      (str/replace " " "-")))
+  (format "#%s"
+          (-> heading
+              lower-case
+              (str/replace #"[^a-z0-9 ]" "")
+              (str/replace " " "-"))))
+
+(defn- github-wiki-text->link
+  "GitHub's wikis rewrite relative links, so we prepend a question mark."
+  [heading]
+  (format "?#%s"
+          (-> heading
+              lower-case
+              (str/replace #"[^a-z0-9 ]" "")
+              (str/replace " " "-"))))
 
 (defn- build-toc-tree
   "Return a markdown nested list of bullets for this table of contents."
-  [weighted-headings]
+  [weighted-headings text->link]
   (join "\n"
         (map (fn [[weight text]]
-               (format "%s- [%s](#%s)"
+               (format "%s- [%s](%s)"
                        (repeat-string "  " (dec weight))
                        text
                        (text->link text)))
@@ -45,13 +55,14 @@
 
 (defn build-toc
   "Given markdown source return a table of contents."
-  [markdown]
+  [markdown wiki?]
   (format
    "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*\n\n%s\n\n"
-   (->> markdown
-        get-headings
-        (map add-weight)
-        build-toc-tree)))
+   (build-toc-tree
+    (->> markdown
+         get-headings
+         (map add-weight))
+    (if wiki? github-wiki-text->link github-text->link))))
 
 (defn- remove-toc
   "Remove an existing table of contents from markdown source."
@@ -70,7 +81,7 @@
   [markdown]
   (->> markdown
        remove-toc
-       (str (build-toc markdown))))
+       (str (build-toc markdown false))))
 
 (defn- file-exists?
   [path]
