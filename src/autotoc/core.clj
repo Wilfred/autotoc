@@ -78,10 +78,10 @@
 
 (defn- update-toc
   "Add or update a table of contents in markdown source."
-  [markdown]
+  [markdown wiki?]
   (->> markdown
        remove-toc
-       (str (build-toc markdown false))))
+       (str (build-toc markdown wiki?))))
 
 (defn- file-exists?
   [path]
@@ -90,9 +90,18 @@
 (defn -main
   "Update the table of contents on all files specified."
   [& filenames]
-  (if filenames
-    (doseq [filename filenames]
-      (if (file-exists? filename)
-        (spit filename (update-toc (slurp filename)))
-        (println "No such file:" filename)))
-    (println "Usage: /path/to/readme.md")))
+  (let [wiki? (ref false)]
+    (if filenames
+      (doseq [filename filenames]
+        (cond
+         (= filename "--wiki")
+         (dosync (ref-set wiki? true))
+
+         (file-exists? filename)
+         (spit filename (update-toc (slurp filename) @wiki?))
+
+         :else
+         (println "No such file:" filename)))
+      (println "Usage: \n
+autotoc <path>...
+autotoc --wiki <path>..."))))
