@@ -1,7 +1,8 @@
 (ns autotoc.core
   (:require [clojure.string :refer [split-lines trim join lower-case]]
             [clojure.string :as str])
-  (:import [java.io File]))
+  (:import [java.io File])
+  (:gen-class))
 
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
