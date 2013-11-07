@@ -88,7 +88,7 @@
   (.exists (File. path)))
 
 (defn -main
-  "I don't do a whole lot."
+  "Update the table of contents on all files specified."
   [& filenames]
   (if filenames
     (doseq [filename filenames]
