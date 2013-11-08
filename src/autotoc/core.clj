@@ -53,7 +53,7 @@
   (format "#%s"
           (-> heading
               lower-case
-              (str/replace #"[^a-z0-9 ]" "")
+              (str/replace #"[^a-z0-9 -]" "")
               (str/replace " " "-"))))
 
 (defn- github-wiki-text->link
@@ -62,7 +62,7 @@
   (format "?#%s"
           (-> heading
               lower-case
-              (str/replace #"[^a-z0-9 ]" "")
+              (str/replace #"[^a-z0-9 -]" "")
               (str/replace " " "-"))))
 
 (defn- build-toc-tree
