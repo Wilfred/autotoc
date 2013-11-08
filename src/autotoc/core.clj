@@ -11,7 +11,12 @@
     (let [line (first lines)]
       (cond
        (empty? lines) headings
-       (.startsWith line "#") (recur (conj headings line) (rest lines) in-code)
+       
+       (.startsWith line "```") (recur headings (rest lines) (not in-code))
+       
+       (and (not in-code) (.startsWith line "#"))
+       (recur (conj headings line) (rest lines) in-code)
+       
        :else (recur headings (rest lines) in-code)))))
 
 (defn- add-weight
