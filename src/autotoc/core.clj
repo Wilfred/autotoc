@@ -65,6 +65,13 @@
               (str/replace #"[^a-z0-9 -]" "")
               (str/replace " " "-"))))
 
+(defn- extract-link-names
+  "Replace all markdown links with just their names.
+  E.g. \"[Foo Bar](http://example.com) bar\"
+  becomes: \"Foo Bar bar\""
+  [markdown]
+  (str/replace markdown #"\[(.*?)\]\(.*?\)" (fn [[_ link-name]] link-name)))
+
 (defn- build-toc-tree
   "Return a markdown nested list of bullets for this table of contents."
   [weighted-headings text->link]
@@ -72,8 +79,8 @@
         (map (fn [[weight text]]
                (format "%s- [%s](%s)"
                        (repeat-string "  " (dec weight))
-                       text
-                       (text->link text)))
+                       (extract-link-names text)
+                       (text->link (extract-link-names text))))
              weighted-headings)))
 
 (defn build-toc
