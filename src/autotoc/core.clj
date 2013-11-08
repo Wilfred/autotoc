@@ -65,13 +65,16 @@
 (defn build-toc
   "Given markdown source return a table of contents."
   [markdown wiki?]
-  (format
-   "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*\n\n%s\n\n"
-   (build-toc-tree
-    (->> markdown
-         get-headings
-         (map add-weight))
-    (if wiki? github-wiki-text->link github-text->link))))
+  (let [tree (build-toc-tree
+              (->> markdown
+                   get-headings
+                   (map add-weight))
+              (if wiki? github-wiki-text->link github-text->link))]
+    (if (seq tree)
+      (format
+       "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*\n\n%s\n\n"
+       tree)
+      "")))
 
 (defn- remove-toc
   "Remove an existing table of contents from markdown source."
