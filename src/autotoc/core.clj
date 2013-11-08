@@ -28,6 +28,20 @@
   (let [[_ prefix text] (re-find #"^(#+)(.*?)#*$" (trim heading))]
     (list (count prefix) (trim text))))
 
+(defn- balance-weights
+  "Given a (possibly empty) list of weighted headings, ensure the lowest weight is 1.
+  FIXME: other ways the tree can be unbalanced"
+  [weighted-headings]
+  (if (seq weighted-headings)
+    (let [lowest-weight
+          (apply min (map first weighted-headings))
+          excess (dec lowest-weight)]
+      (if (zero? excess)
+        weighted-headings
+        ;; Subtract the same amount from all the headings to make the lowest weight 1.
+        (map (fn [[weight heading]] [(- weight excess) heading]) weighted-headings)))
+    weighted-headings))
+
 (defn- repeat-string
   "Return a string that is the original string repeated n times."
   [string n]
@@ -68,7 +82,8 @@
   (let [tree (build-toc-tree
               (->> markdown
                    get-headings
-                   (map add-weight))
+                   (map add-weight)
+                   balance-weights)
               (if wiki? github-wiki-text->link github-text->link))]
     (if (seq tree)
       (format
