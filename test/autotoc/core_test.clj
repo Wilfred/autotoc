@@ -12,3 +12,11 @@
 ```" false) "```
 #foo
 ```")))
+
+(deftest with-headings
+  (is (= (update-toc "#foo" false)
+         "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*
+
+- [foo](#foo)
+
+#foo")))
