@@ -101,16 +101,15 @@
 (defn- remove-toc
   "Remove an existing table of contents from markdown source."
   [markdown]
-  (trim
-   (str/replace
-    markdown
-    ;; i: case insensitive, m: ^ matches newlines anywhere in string
-    #"(?im)\**table of contents.*
+  (str/replace
+   markdown
+   ;; i: case insensitive, m: ^ matches newlines anywhere in string
+   #"(?im)\**table of contents.*
 
-(\s*- \[.*\]\(.*\)\n)*"
-   "")))
+(\s*- \[.*\]\(.*\)\n)*\n?"
+   ""))
 
-(defn- update-toc
+(defn update-toc
   "Add or update a table of contents in markdown source."
   [markdown wiki?]
   (->> markdown
