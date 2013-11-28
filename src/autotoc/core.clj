@@ -4,6 +4,11 @@
   (:import [java.io File])
   (:gen-class))
 
+(defn- hash-heading?
+  "Return true if this line of code is a markdown heading starting with #."
+  [line]
+  (.startsWith line "#"))
+
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
   [markdown]
