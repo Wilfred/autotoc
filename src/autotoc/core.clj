@@ -9,6 +9,11 @@
   [line]
   (.startsWith line "#"))
 
+(defn- underline-heading?
+  "Return true if these two lines make up a heading that is underlined."
+  [line1 line2]
+  (re-find #"(=+|-+)\s*$" line2))
+
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
   [markdown]
@@ -17,10 +22,18 @@
         in-code (ref false)
         lines (split-lines markdown)]
     (while (< @index (count lines))
-      (let [line (lines @index)]
+      (let [line (lines @index)
+            next-line (if (< @index (dec (count lines))) (lines (inc @index)))]
         (cond
-         (and (.startsWith line "#") (not @in-code))
+         (and (hash-heading? line) (not @in-code))
          (dosync (alter headings #(conj % line)))
+
+         (and
+          next-line ;; not on the last line
+          (underline-heading? line next-line))
+         (dosync
+          (alter headings #(conj % (str line "\n" next-line)))
+          (alter index inc))
          
          (.startsWith line "```")
          (dosync (alter in-code not))))
@@ -30,8 +43,14 @@
 (defn- add-weight
   "Strip # characters from a heading and return a list (weight, text-content)."
   [heading]
-  (let [[_ prefix text] (re-find #"^(#+)(.*?)#*$" (trim heading))]
-    (list (count prefix) (trim text))))
+  (if (hash-heading? heading)
+    (let [[_ prefix text] (re-find #"^(#+)(.*?)#*$" (trim heading))]
+      (list (count prefix) (trim text)))
+    
+    ;; otherwise, an underlined heading
+    (let [[text underline] (split-lines heading)
+          weight (if (re-find #"=+" underline) 1 2)]
+      (list weight text))))
 
 (defn- balance-weights
   "Given a (possibly empty) list of weighted headings, ensure the lowest weight is 1.

@@ -19,4 +19,11 @@
 
 - [foo](#foo)
 
-#foo")))
+#foo"))
+  (is (= (update-toc "foo\n===" false)
+         "**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*
+
+- [foo](#foo)
+
+foo
+===")))
