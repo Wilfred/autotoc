@@ -11,12 +11,11 @@
         in-code (ref false)]
     (doseq [line (split-lines markdown)]
       (cond
-        (.startsWith line "```")
-        (dosync (alter in-code not))
-
-        (and (not @in-code) (.startsWith line "#"))
-        (dosync
-         (alter lines #(conj % line)))))
+       (and (.startsWith line "#") (not @in-code))
+       (dosync (alter lines #(conj % line)))
+       
+       (.startsWith line "```")
+       (dosync (alter in-code not))))
     @lines))
 
 (defn- add-weight
