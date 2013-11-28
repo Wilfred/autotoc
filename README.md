@@ -14,6 +14,10 @@ markdown files. Inspired by
 
     $ lein run /path/to/README.md
 
+For tests, simply:
+
+    $ lein test
+
 ## License
 
 Copyright © 2013 Wilfred Hughes
