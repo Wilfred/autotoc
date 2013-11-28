@@ -15,9 +15,11 @@
   (let [underline-heading-in-code "```
 foo
 ===
-```"]
-    (is (= (update-toc underline-heading-in-code false)
-           underline-heading-in-code))))
+```"
+        underline-in-indented-code "   foo
+   ---"]
+    (is (= (update-toc underline-in-indented-code false)
+           underline-in-indented-code))))
 
 (deftest with-headings
   (is (= (update-toc "#foo" false)

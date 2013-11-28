@@ -12,7 +12,7 @@
 (defn- underline-heading?
   "Return true if these two lines make up a heading that is underlined."
   [line1 line2]
-  (re-find #"(=+|-+)\s*$" line2))
+  (re-find #"^(=+|-+)\s*$" line2))
 
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
