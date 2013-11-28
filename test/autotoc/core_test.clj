@@ -7,11 +7,17 @@
 (deftest no-headings
   (is (= (update-toc "foo" false) "foo"))
   (is (= (update-toc "\nfoo\n" false) "\nfoo\n"))
-  (is (= (update-toc "```
+  (let [hash-heading-in-code "```
 #foo
-```" false) "```
-#foo
-```")))
+```"]
+    (is (= (update-toc hash-heading-in-code false)
+           hash-heading-in-code)))
+  (let [underline-heading-in-code "```
+foo
+===
+```"]
+    (is (= (update-toc underline-heading-in-code false)
+           underline-heading-in-code))))
 
 (deftest with-headings
   (is (= (update-toc "#foo" false)

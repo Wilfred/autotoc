@@ -30,7 +30,8 @@
 
          (and
           next-line ;; not on the last line
-          (underline-heading? line next-line))
+          (underline-heading? line next-line)
+          (not @in-code))
          (dosync
           (alter headings #(conj % (str line "\n" next-line)))
           (alter index inc))
