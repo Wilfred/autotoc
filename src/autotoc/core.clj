@@ -7,20 +7,17 @@
 (defn- get-headings
   "Return a vector of headings in the given markdown source."
   [markdown]
-  (first
-   (reduce
-    (fn [[headings in-code] line]
+  (let [lines (ref [])
+        in-code (ref false)]
+    (doseq [line (split-lines markdown)]
       (cond
-       (.startsWith line "```")
-       [headings (not in-code)]
+        (.startsWith line "```")
+        (dosync (alter in-code not))
 
-       (and (not in-code) (.startsWith line "#"))
-       [(conj headings line) in-code]
-
-       :else
-       [headings in-code]))
-    '([] false)
-    (split-lines markdown))))
+        (and (not @in-code) (.startsWith line "#"))
+        (dosync
+         (alter lines #(conj % line)))))
+    @lines))
 
 (defn- add-weight
   "Strip # characters from a heading and return a list (weight, text-content)."
